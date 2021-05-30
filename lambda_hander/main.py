@@ -4,7 +4,7 @@ import json
 
 conn = None
 cursor = None
-
+VWS_TABLE = os.getenv("VWS_TABLE")
 
 # Handles connection cleanup
 def cleanup():
@@ -42,8 +42,8 @@ def lambda_handler(event, context):
             # execute a statement
             lat = message["Lat"]
             lon = message["Lon"]
-            water_level = 120
-            query = f'INSERT INTO vws_geo_db (LAT, LON, WATER_LEVEL) VALUES({lat}, {lon}, {water_level})'
+            water_level = int(message["WaterLevel"])
+            query = f'INSERT INTO {VWS_TABLE} (LAT, LON, WATER_LEVEL) VALUES({lat}, {lon}, {water_level})'
             print(query)
             cursor.execute(f'INSERT INTO vws_geo_db (LAT, LON, WATER_LEVEL) VALUES({lat}, {lon}, {water_level})')
             conn.commit()
