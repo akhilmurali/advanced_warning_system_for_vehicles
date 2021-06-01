@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 const port = process.env.PORT || 3000;
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
     const client = new Client({
         user: 'vzmvmwyepoqpvl',
         host: 'ec2-52-0-114-209.compute-1.amazonaws.com',
@@ -18,11 +18,21 @@ app.get('/', (req, res) => {
         console.log(e);
         console.error(e);
     }
-    client.query('SELECT DISTINCT * FROM vws_geo_db WHERE water_level > 100', (err, res) => {
-        console.log(err, res)
-        client.end()
-    })
+    result = await getLocationData(client);
+    console.log("result data", result);
+    res.send(result)
 })
+
+async function getLocationData(client) {
+    let response;
+    try {
+      response = await client.query('SELECT DISTINCT * FROM vws_geo_db WHERE water_level > 100');
+      console.log(response)
+      return response.rows;
+    } catch (error) {
+      // handle error
+    }
+  }
 
 app.listen(port, () => {
     console.log("Server listening on port " + port);
