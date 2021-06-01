@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>VWS Dashboard</title>
+
+    <style type="text/css">
+        /* Set the size of the div element that contains the map */
+        #map {
+            height: 400px;
+            /* The height is 400 pixels */
+            width: 100%;
+            /* The width is the width of the web page */
+        }
+    </style>
+    <script>
+        // Initialize and add the map
+        function initMap() {
+            $.get('https://vws-server-bits-wilp.herokuapp.com/',  // url
+                function (data, textStatus, jqXHR) {  // success callback
+                    console.log(data)
+                    var locations = [
+                ['Bondi Beach', -33.890542, 151.274856, 4],
+                ['Coogee Beach', -33.923036, 151.259052, 5],
+                ['Cronulla Beach', -34.028249, 151.157507, 3],
+                ['Manly Beach', -33.80010128657071, 151.28747820854187, 2],
+                ['Maroubra Beach', -33.950198, 151.259302, 1]
+            ];
+
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 10,
+                center: new google.maps.LatLng(-33.92, 151.25),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+
+            var infowindow = new google.maps.InfoWindow();
+
+            var marker, i;
+
+            for (i = 0; i < locations.length; i++) {
+                marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                    map: map
+                });
+            }
+            });
+        }
+    </script>
+
+</head>
+
+<body>
+    <h3>VWS Dashboard</h3>
+    <!--The div element for the map -->
+    <div id="map"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzVrna2cpOQDeUeskh9q3Mhh_ejOVlwkk&callback=initMap&libraries=&v=weekly"
+        async></script>
+</body>
+
+</html>
