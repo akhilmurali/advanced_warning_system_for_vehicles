@@ -9,7 +9,8 @@ app.get('/', (req, res) => {
         host: 'ec2-52-0-114-209.compute-1.amazonaws.com',
         database: 'dbkbcvt12pj6ek',
         password: 'd236c1885cfb1694cfab0b91210df1930a6282466d145d2f179c4a24a5925c23',
-        port: 5432
+        port: 5432,
+        ssl: true
     });
     try{
         client.connect();
