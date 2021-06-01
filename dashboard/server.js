@@ -10,7 +10,7 @@ app.get('/', (req, res) => {
         database: 'dbkbcvt12pj6ek',
         password: 'd236c1885cfb1694cfab0b91210df1930a6282466d145d2f179c4a24a5925c23',
         port: 5432,
-        ssl: true
+        ssl: { rejectUnauthorized: false }
     });
     try{
         client.connect();
@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
         console.log(e);
         console.error(e);
     }
-    client.query('SSELECT DISTINCT * FROM vws_geo_db WHERE water_level > 100', (err, res) => {
+    client.query('SELECT DISTINCT * FROM vws_geo_db WHERE water_level > 100', (err, res) => {
         console.log(err, res)
         client.end()
     })
