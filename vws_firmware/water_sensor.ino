@@ -1,5 +1,5 @@
-#include <ESP8266WiFi.h> // Enables the ESP8266 to connect to the local network (via WiFi)
-#include <PubSubClient.h> // Allows us to connect to, and publish to the MQTT broker
+#include <ESP8266WiFi.h> 
+#include <PubSubClient.h>
 #define sensorPin A0
 #define READ_FREQUENCY 60000
 // Value for storing water level
@@ -33,14 +33,10 @@ void setup() {
     Serial.print(".");
   }
 
-  // Debugging - Output the IP Address of the ESP8266
   Serial.println("WiFi connected");
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
-  // Connect to MQTT Broker
-  // client.connect returns a boolean value to let us know if the connection was successful.
-  // If the connection is failing, make sure you are using the correct MQTT Username and Password (Setup Earlier in the Instructable)
   if (client.connect(clientID, mqtt_username, mqtt_password)) {
     Serial.println("Connected to MQTT Broker!");
   }
@@ -50,12 +46,10 @@ void setup() {
 }
 
 int readSensor() {
-  val = analogRead(sensorPin);    // Read the analog value form sensor
-  return val;             // send current reading
-}
+  val = analogRead(sensorPin);
+  return val;            
 
 void loop() {
-  //get the reading from the function below and print it
   int level = readSensor();
   Serial.print("Water level: ");
   Serial.println(level);
@@ -63,21 +57,16 @@ void loop() {
   String data = "{\"Lat\":" + coordinates[random_index][0] + ", \"Lon\":" + coordinates[random_index][1] + ", \"WaterLevel\":" + level + "}";
   Serial.println(data);
   int str_len = data.length() + 1; 
-  // Prepare the character array (the buffer) 
   char char_array[str_len];
-  // Copy it over 
   data.toCharArray(char_array, str_len);
   if (client.publish(mqtt_topic, char_array)) {
      Serial.println("Published data to local broker.");
   }
-  // Again, client.publish will return a boolean value depending on whether it succeded or not.
-  // If the message failed to send, we will try again, as the connection may have broken.
   else {
      Serial.println("Message failed to send. Reconnecting to MQTT Broker and trying again");
      client.connect(clientID, mqtt_username, mqtt_password);
-     delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
+     delay(10); 
      client.publish(mqtt_topic, char_array);
   }
-  // Read the sensor data once every minute
   delay(READ_FREQUENCY);
 }
