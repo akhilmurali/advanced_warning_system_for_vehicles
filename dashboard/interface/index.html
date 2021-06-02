@@ -18,32 +18,26 @@
         function initMap() {
             $.get('https://vws-server-bits-wilp.herokuapp.com/',  // url
                 function (data, textStatus, jqXHR) {  // success callback
-                    console.log(data)
-                    var locations = [
-                ['Bondi Beach', -33.890542, 151.274856, 4],
-                ['Coogee Beach', -33.923036, 151.259052, 5],
-                ['Cronulla Beach', -34.028249, 151.157507, 3],
-                ['Manly Beach', -33.80010128657071, 151.28747820854187, 2],
-                ['Maroubra Beach', -33.950198, 151.259302, 1]
-            ];
+                    console.log("data", data);
+                    if (data.length) {
+                        var map = new google.maps.Map(document.getElementById('map'), {
+                            zoom: 10,
+                            center: new google.maps.LatLng(parseFloat(data[0]["lat"]), parseFloat(data[0]["lon"])),
+                            mapTypeId: google.maps.MapTypeId.ROADMAP
+                        });
 
-            var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 10,
-                center: new google.maps.LatLng(-33.92, 151.25),
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            });
+                        var infowindow = new google.maps.InfoWindow();
 
-            var infowindow = new google.maps.InfoWindow();
+                        var marker, i;
 
-            var marker, i;
-
-            for (i = 0; i < locations.length; i++) {
-                marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-                    map: map
+                        for (i = 0; i < data.length; i++) {
+                            marker = new google.maps.Marker({
+                                position: new google.maps.LatLng(parseFloat(data[i]["lat"]), parseFloat(data[i]["lon"])),
+                                map: map
+                            });
+                        }
+                    }
                 });
-            }
-            });
         }
     </script>
 
@@ -53,10 +47,11 @@
     <h3>VWS Dashboard</h3>
     <!--The div element for the map -->
     <div id="map"></div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
     <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCzVrna2cpOQDeUeskh9q3Mhh_ejOVlwkk&callback=initMap&libraries=&v=weekly"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZX91dXBZQYUbRsr1u8OJndhTL2WMA_YM&callback=initMap&libraries=&v=weekly"
         async></script>
 </body>
 
